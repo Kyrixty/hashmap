@@ -27,3 +27,10 @@ int hm_set(hashmap_t *h, const char *k, const void *data, size_t size);
  * data provided through hm_set
  */
 void *hm_get(const hashmap_t *h, const char *k);
+
+/**
+ * Removes an item given a key from the hashmap
+ * If not found or (h/k) is NULL, returns -1.
+ * Returns 1 item is successfully deleted.
+ */
+int hm_remove(hashmap_t *h, const char *k);
