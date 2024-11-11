@@ -167,6 +167,8 @@ void *bucket_get(hashmap_bucket_t *b, const char *k)
     for (size_t i = 0; i < b->length; i++)
     {
         hashmap_item_t item = b->items[i];
+        if (!item.key || !item.data)
+            continue;
         if (strncmp(item.key, k, maxCmpLen) == 0)
         {
             void *blob = malloc(item.size);
@@ -308,7 +310,7 @@ int hm_set(hashmap_t *h, const char *k, const void *data, size_t size)
         hm_resize(h);
         keyHash = hash(k, h->nBuckets);
     }
-    printf("keyHash: %zu", keyHash);
+    // printf("keyHash: %zu", keyHash);
     int status = bucket_add(h->buckets + keyHash, k, data, size);
     if (status == 0)
     {
@@ -329,4 +331,43 @@ void *hm_get(const hashmap_t *h, const char *k)
         return NULL;
     }
     bucket_get(h->buckets + keyHash, k);
+}
+
+bool hm_has(const hashmap_t *h, const char *k)
+{
+    return hm_get(h, k) != NULL;
+}
+
+int hm_remove(hashmap_t *h, const char *k)
+{
+    if (!h || !k)
+    {
+        return -1;
+    }
+    size_t maxCmpLen = strlen(k);
+    size_t keyHash = hash(k, h->nBuckets);
+    hashmap_bucket_t *b = &h->buckets[keyHash];
+    if (!b->items || !b->length || !b->capacity)
+        return -1;
+    int idx = 0;
+    bool match = false;
+    for (size_t i = 0; i < b->length; i++)
+    {
+        hashmap_item_t item = b->items[i];
+        if (strncmp(k, item.key, maxCmpLen) == 0)
+        {
+            match = true;
+            continue;
+        }
+
+        b->items[idx] = b->items[i];
+        idx++;
+    }
+    if (match)
+    {
+
+        b->length--;
+        h->nItems--;
+    }
+    return 0;
 }

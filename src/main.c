@@ -21,5 +21,18 @@ int main() {
         int *data = hm_get(h, k);
         printf("Key: %s, got: %d\n", k, *data);
     }
+    char *k = malloc(2);
+    k[0] = 'C';
+    k[1] = 0;
+    printf("HAS %s ? %d\n", k, hm_has(h, k));
+    hm_remove(h, k);
+    printf("HAS %s ? %d\n", k, hm_has(h, k));
+    k[0] = 'Z' + 3;
+    int stuff = 5050;
+    int *datastuff = &stuff;
+    hm_set(h, k, datastuff, sizeof(*datastuff));
+    printf("HAS %s ? %d\n", k, hm_has(h, k));
+    k[0] = 'C';
+    printf("HAS %s ? %d\n", k, hm_has(h, k));
     return 0;
 }

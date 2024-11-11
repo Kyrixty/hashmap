@@ -1,5 +1,6 @@
 #pragma once
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct HashMap hashmap_t;
 
@@ -29,8 +30,14 @@ int hm_set(hashmap_t *h, const char *k, const void *data, size_t size);
 void *hm_get(const hashmap_t *h, const char *k);
 
 /**
+ * Returns true if hashmap has an item with corresponding key,
+ * false if otherwise.
+ */
+bool hm_has(const hashmap_t *h, const char *k);
+
+/**
  * Removes an item given a key from the hashmap
  * If not found or (h/k) is NULL, returns -1.
- * Returns 1 item is successfully deleted.
+ * Returns 1 if item is successfully deleted.
  */
 int hm_remove(hashmap_t *h, const char *k);
